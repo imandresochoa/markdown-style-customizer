@@ -13,7 +13,6 @@ import {
 export function ThemeActions() {
   const { state, dispatch } = useAppState();
   const [includeBlocks, setIncludeBlocks] = useState(false);
-  const [presetName, setPresetName] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleExport = (withBlocks: boolean) => {
@@ -67,9 +66,12 @@ export function ThemeActions() {
   };
 
   const handleSavePreset = () => {
-    const name = presetName.trim() || state.themeName;
+    const name = state.themeName.trim();
+    if (!name) {
+      dispatch({ type: 'SET_TOAST', message: 'Enter a name before saving' });
+      return;
+    }
     dispatch({ type: 'SAVE_PRESET', name });
-    setPresetName('');
   };
 
   const buildSpecPayload = () => createSpecPayload(state.themeName, state.theme);
@@ -92,22 +94,92 @@ export function ThemeActions() {
   return (
     <div className="sidebar-header">
       <h1>Markdown Style Customizer</h1>
-      <p>Edit styles here. Click blocks in the preview to edit content.</p>
-      <input
-        className="theme-name-input"
-        value={state.themeName}
-        onChange={(e) => dispatch({ type: 'SET_THEME_NAME', name: e.target.value })}
-        placeholder="Theme name"
-        aria-label="Theme name"
-      />
+      <p className="sidebar-lead">Edit styles here. Click blocks in the preview to edit content.</p>
 
-      <div className="share-panel" style={{ marginTop: 12 }}>
+      <section className="sidebar-section">
+        <h2 className="sidebar-section-label">Theme</h2>
+        <div className="sidebar-name-row">
+          <input
+            className="theme-name-input"
+            value={state.themeName}
+            onChange={(e) => dispatch({ type: 'SET_THEME_NAME', name: e.target.value })}
+            placeholder="Theme name"
+            aria-label="Theme name"
+          />
+          <button type="button" className="btn btn-sm btn-primary" onClick={handleSavePreset}>
+            Save
+          </button>
+        </div>
+
+        {state.presets.length > 0 && (
+          <ul className="presets-list">
+            {state.presets.map((preset) => (
+              <li key={preset.id} className="preset-item">
+                <span title={preset.name}>{preset.name}</span>
+                <div className="preset-actions">
+                  <button
+                    type="button"
+                    className="btn btn-sm"
+                    onClick={() => dispatch({ type: 'LOAD_PRESET', id: preset.id })}
+                  >
+                    Load
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-danger"
+                    onClick={() => dispatch({ type: 'DELETE_PRESET', id: preset.id })}
+                  >
+                    Del
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <section className="sidebar-section">
+        <h2 className="sidebar-section-label">Share</h2>
+        <label className="share-checkbox">
+          <input
+            type="checkbox"
+            checked={includeBlocks}
+            onChange={(e) => setIncludeBlocks(e.target.checked)}
+          />
+          Include article content in link
+        </label>
+        <div className="share-panel-row">
+          <button type="button" className="btn btn-sm btn-primary" onClick={handleCopyLink}>
+            Copy share link
+          </button>
+        </div>
+      </section>
+
+      <section className="sidebar-section">
+        <h2 className="sidebar-section-label">Design handoff</h2>
+        <div className="share-panel-row">
+          <button type="button" className="btn btn-sm" onClick={handleCopyCss}>
+            Copy CSS
+          </button>
+          <button type="button" className="btn btn-sm" onClick={handleCopySpecLink}>
+            Copy spec link
+          </button>
+        </div>
+        <div className="share-panel-row">
+          <button type="button" className="btn btn-sm btn-primary" onClick={handleOpenSpec}>
+            Open handoff
+          </button>
+        </div>
+      </section>
+
+      <section className="sidebar-section">
+        <h2 className="sidebar-section-label">Backup</h2>
         <div className="share-panel-row">
           <button type="button" className="btn btn-sm" onClick={() => handleExport(false)}>
             Export JSON
           </button>
           <button type="button" className="btn btn-sm" onClick={() => handleExport(true)}>
-            Export + blocks
+            Export + content
           </button>
           <button
             type="button"
@@ -128,75 +200,7 @@ export function ThemeActions() {
             }}
           />
         </div>
-
-        <label className="share-checkbox">
-          <input
-            type="checkbox"
-            checked={includeBlocks}
-            onChange={(e) => setIncludeBlocks(e.target.checked)}
-          />
-          Include block content &amp; order in share link
-        </label>
-
-        <div className="share-panel-row">
-          <button type="button" className="btn btn-sm btn-primary" onClick={handleCopyLink}>
-            Copy share link
-          </button>
-          <button type="button" className="btn btn-sm" onClick={handleCopyCss}>
-            Copy CSS
-          </button>
-        </div>
-
-        <div className="share-panel-row">
-          <button type="button" className="btn btn-sm btn-primary" onClick={handleCopySpecLink}>
-            Copy spec link
-          </button>
-          <button type="button" className="btn btn-sm" onClick={handleOpenSpec}>
-            Open spec
-          </button>
-        </div>
-
-        <div className="share-panel-row">
-          <input
-            type="text"
-            className="theme-name-input"
-            style={{ marginTop: 0, flex: 1 }}
-            value={presetName}
-            onChange={(e) => setPresetName(e.target.value)}
-            placeholder="Preset name"
-            aria-label="Preset name"
-          />
-          <button type="button" className="btn btn-sm" onClick={handleSavePreset}>
-            Save preset
-          </button>
-        </div>
-
-        {state.presets.length > 0 && (
-          <div className="presets-list">
-            {state.presets.map((preset) => (
-              <div key={preset.id} className="preset-item">
-                <span title={preset.name}>{preset.name}</span>
-                <div className="preset-actions">
-                  <button
-                    type="button"
-                    className="btn btn-sm"
-                    onClick={() => dispatch({ type: 'LOAD_PRESET', id: preset.id })}
-                  >
-                    Load
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-sm btn-danger"
-                    onClick={() => dispatch({ type: 'DELETE_PRESET', id: preset.id })}
-                  >
-                    Del
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      </section>
     </div>
   );
 }

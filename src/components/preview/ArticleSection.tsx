@@ -5,6 +5,8 @@ import { marked } from 'marked';
 import type { MarkdownBlock } from '../../theme/schema';
 import { useAppState } from '../../store/appState';
 import { annotateMarkdownHtml } from '../../utils/annotateMarkdownHtml';
+import { MaterialIcon } from '../icons/MaterialIcon';
+import { MATERIAL_ICONS } from '../icons/iconNames';
 
 marked.setOptions({ gfm: true, breaks: true });
 
@@ -72,14 +74,7 @@ export function ArticleSection({ block, isDragging }: Props) {
         {...attributes}
         {...listeners}
       >
-        <svg width="10" height="16" viewBox="0 0 10 16" aria-hidden="true">
-          <circle cx="2.5" cy="2.5" r="1.5" />
-          <circle cx="7.5" cy="2.5" r="1.5" />
-          <circle cx="2.5" cy="8" r="1.5" />
-          <circle cx="7.5" cy="8" r="1.5" />
-          <circle cx="2.5" cy="13.5" r="1.5" />
-          <circle cx="7.5" cy="13.5" r="1.5" />
-        </svg>
+        <MaterialIcon name={MATERIAL_ICONS.dragIndicator} size={18} className="drag-handle-icon" />
       </button>
 
       {isSelected ? (

@@ -6,6 +6,19 @@
   color: #111827;
 }
 
+.material-symbols-outlined {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  user-select: none;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+}
+
+.material-symbols-filled {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+}
+
 /* Work area (left sidebar) */
 .work-area {
   width: 360px;
@@ -176,6 +189,46 @@
   font-size: 0.8125rem;
   color: #6b7280;
   margin: 0;
+}
+
+.sidebar-lead {
+  margin-top: 4px;
+}
+
+.sidebar-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.sidebar-section:first-of-type {
+  margin-top: 12px;
+  padding-top: 0;
+  border-top: none;
+}
+
+.sidebar-section-label {
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #9ca3af;
+}
+
+.sidebar-name-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.sidebar-name-row .theme-name-input {
+  flex: 1;
+  min-width: 0;
+  margin-top: 0;
 }
 
 .style-groups {
@@ -470,8 +523,8 @@
   touch-action: none;
 }
 
-.drag-handle svg {
-  fill: currentColor;
+.drag-handle svg,
+.drag-handle .material-symbols-outlined {
   pointer-events: none;
 }
 
@@ -505,7 +558,6 @@
   border: 1px solid #d1d5db;
   border-radius: 6px;
   font-size: 0.875rem;
-  margin-top: 8px;
 }
 
 .theme-name-input:focus {
@@ -532,12 +584,24 @@
   background: #f3f4f6;
 }
 
-.control-group-header span {
+.control-group-header span,
+.control-group-label {
   font-size: 0.8125rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: #374151;
+}
+
+.control-group-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.control-group-chevron {
+  flex-shrink: 0;
+  color: #6b7280;
 }
 
 .control-group-actions {
@@ -659,7 +723,9 @@
   gap: 4px;
   max-height: 120px;
   overflow-y: auto;
-  margin-top: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .preset-item {

@@ -30,6 +30,15 @@ export function SpecPage({ payload }: Props) {
     }
   };
 
+  const handleBackToEditor = () => {
+    const base = `${window.location.pathname}${window.location.search}`;
+    if (window.location.hash) {
+      window.location.hash = '';
+      return;
+    }
+    window.location.href = base;
+  };
+
   return (
     <div className="spec-page">
       <header className="spec-header">
@@ -42,6 +51,9 @@ export function SpecPage({ payload }: Props) {
             </p>
           </div>
           <div className="spec-header-actions">
+            <button type="button" className="btn btn-sm" onClick={handleBackToEditor}>
+              Back to editor
+            </button>
             <button type="button" className="btn btn-sm" onClick={handleCopyLink}>
               Copy link
             </button>

@@ -2,60 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import { BLOCK_TEMPLATES } from '../../data/blockTemplates';
 import { findDefaultBlock } from '../../data/defaultBlocks';
 import { useAppState } from '../../store/appState';
-
-function IconAdd() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-      <path d="M8 3.5v9M3.5 8h9" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function IconRemoveBlock() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-      <path
-        d="M2.75 4.25h10.5M6 4.25V3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1.25M5.25 4.25l.55 8.25a.75.75 0 0 0 .75.7h3.1a.75.75 0 0 0 .75-.7l.55-8.25"
-        stroke="currentColor"
-        strokeWidth="1.35"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-      <path d="M6.75 7v4.25M9.25 7v4.25" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function IconRestoreContent() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-      <path
-        d="M4.25 3.5v3h3"
-        stroke="currentColor"
-        strokeWidth="1.35"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-      <path
-        d="M7.25 3.75A5 5 0 1 0 12 8"
-        stroke="currentColor"
-        strokeWidth="1.35"
-        strokeLinecap="round"
-        fill="none"
-      />
-      <path
-        d="M5.5 8.75h4.25a1.75 1.75 0 0 0 0-3.5H7.75"
-        stroke="currentColor"
-        strokeWidth="1.35"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-    </svg>
-  );
-}
+import { MaterialIcon } from '../icons/MaterialIcon';
+import { MATERIAL_ICONS } from '../icons/iconNames';
 
 export function PreviewToolbar() {
   const { state, dispatch } = useAppState();
@@ -117,7 +65,7 @@ export function PreviewToolbar() {
             aria-label="Add block"
             title="Add block below selection…"
           >
-            <IconAdd />
+            <MaterialIcon name={MATERIAL_ICONS.add} size={18} filled />
           </button>
           {menuOpen && (
             <div className="preview-toolbar-menu" role="menu">
@@ -146,7 +94,7 @@ export function PreviewToolbar() {
                 aria-label="Remove selected block"
                 title="Remove selected block"
               >
-                <IconRemoveBlock />
+                <MaterialIcon name={MATERIAL_ICONS.delete} size={18} />
               </button>
             )}
 
@@ -158,7 +106,7 @@ export function PreviewToolbar() {
                 aria-label="Restore original content"
                 title="Restore original content"
               >
-                <IconRestoreContent />
+                <MaterialIcon name={MATERIAL_ICONS.restore} size={18} />
               </button>
             )}
 

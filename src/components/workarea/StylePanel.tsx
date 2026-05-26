@@ -4,6 +4,8 @@ import { useAppState } from '../../store/appState';
 import { StyleControl } from '../sidebar/StyleControl';
 import { SECTION_STYLE_GROUP } from '../../data/defaultBlocks';
 import { resolveFontSizePx } from '../../utils/sizeUnits';
+import { MaterialIcon } from '../icons/MaterialIcon';
+import { MATERIAL_ICONS } from '../icons/iconNames';
 
 export function StylePanel() {
   const { state, dispatch } = useAppState();
@@ -39,8 +41,13 @@ export function StylePanel() {
                 tabIndex={0}
                 onKeyDown={(e) => e.key === 'Enter' && toggleGroup(group.id)}
               >
-                <span>
-                  {isCollapsed ? '▸' : '▾'} {group.label}
+                <span className="control-group-label">
+                  <MaterialIcon
+                    name={isCollapsed ? MATERIAL_ICONS.chevronRight : MATERIAL_ICONS.expandMore}
+                    size={18}
+                    className="control-group-chevron"
+                  />
+                  {group.label}
                 </span>
                 <div className="control-group-actions" onClick={(e) => e.stopPropagation()}>
                   <button
