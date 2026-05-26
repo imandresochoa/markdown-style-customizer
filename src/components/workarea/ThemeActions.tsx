@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useAppState } from '../../store/appState';
 import {
   createSharedPayload,
@@ -9,11 +9,28 @@ import {
   readJsonFile,
   themeToCssBlock,
 } from '../../theme/schema';
+import { MaterialIcon } from '../icons/MaterialIcon';
+import { MATERIAL_ICONS } from '../icons/iconNames';
 
 export function ThemeActions() {
   const { state, dispatch } = useAppState();
   const [includeBlocks, setIncludeBlocks] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [menuOpen]);
+
+  const closeMenu = () => setMenuOpen(false);
 
   const handleExport = (withBlocks: boolean) => {
     const payload = createSharedPayload(
@@ -24,6 +41,7 @@ export function ThemeActions() {
     const slug = state.themeName.toLowerCase().replace(/\s+/g, '-');
     downloadJson(payload, `${slug || 'theme'}.json`);
     dispatch({ type: 'SET_TOAST', message: 'Theme exported' });
+    closeMenu();
   };
 
   const handleImport = async (file: File) => {
@@ -38,6 +56,7 @@ export function ThemeActions() {
       theme: payload.theme,
       blocks: payload.blocks,
     });
+    closeMenu();
   };
 
   const handleCopyLink = async () => {
@@ -53,6 +72,7 @@ export function ThemeActions() {
     } catch {
       dispatch({ type: 'SET_TOAST', message: 'Could not copy link' });
     }
+    closeMenu();
   };
 
   const handleCopyCss = async () => {
@@ -63,6 +83,7 @@ export function ThemeActions() {
     } catch {
       dispatch({ type: 'SET_TOAST', message: 'Could not copy CSS' });
     }
+    closeMenu();
   };
 
   const handleSavePreset = () => {
@@ -84,11 +105,13 @@ export function ThemeActions() {
     } catch {
       dispatch({ type: 'SET_TOAST', message: 'Could not copy spec link' });
     }
+    closeMenu();
   };
 
   const handleOpenSpec = () => {
     const url = encodeSpecShareUrl(buildSpecPayload());
     window.open(url, '_blank', 'noopener,noreferrer');
+    closeMenu();
   };
 
   return (
@@ -139,55 +162,110 @@ export function ThemeActions() {
       </section>
 
       <section className="sidebar-section">
-        <h2 className="sidebar-section-label">Share</h2>
-        <label className="share-checkbox">
-          <input
-            type="checkbox"
-            checked={includeBlocks}
-            onChange={(e) => setIncludeBlocks(e.target.checked)}
-          />
-          Include article content in link
-        </label>
-        <div className="share-panel-row">
-          <button type="button" className="btn btn-sm btn-primary" onClick={handleCopyLink}>
-            Copy share link
-          </button>
-        </div>
-      </section>
-
-      <section className="sidebar-section">
-        <h2 className="sidebar-section-label">Design handoff</h2>
-        <div className="share-panel-row">
-          <button type="button" className="btn btn-sm" onClick={handleCopyCss}>
-            Copy CSS
-          </button>
-          <button type="button" className="btn btn-sm" onClick={handleCopySpecLink}>
-            Copy spec link
-          </button>
-        </div>
-        <div className="share-panel-row">
-          <button type="button" className="btn btn-sm btn-primary" onClick={handleOpenSpec}>
-            Open handoff
-          </button>
-        </div>
-      </section>
-
-      <section className="sidebar-section">
-        <h2 className="sidebar-section-label">Backup</h2>
-        <div className="share-panel-row">
-          <button type="button" className="btn btn-sm" onClick={() => handleExport(false)}>
-            Export JSON
-          </button>
-          <button type="button" className="btn btn-sm" onClick={() => handleExport(true)}>
-            Export + content
-          </button>
+        <div className="actions-menu-wrap" ref={menuRef}>
           <button
             type="button"
-            className="btn btn-sm"
-            onClick={() => fileInputRef.current?.click()}
+            className="btn actions-menu-trigger"
+            onClick={() => setMenuOpen((open) => !open)}
+            aria-expanded={menuOpen}
+            aria-haspopup="menu"
           >
-            Import
+            <MaterialIcon name={MATERIAL_ICONS.share} size={18} />
+            Share & export
+            <MaterialIcon
+              name={MATERIAL_ICONS.expandMore}
+              size={18}
+              className="actions-menu-trigger-chevron"
+            />
           </button>
+
+          {menuOpen && (
+            <div className="actions-menu" role="menu">
+              <div className="actions-menu-group">
+                <div className="actions-menu-label">Share</div>
+                <label
+                  className="actions-menu-checkbox"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <input
+                    type="checkbox"
+                    checked={includeBlocks}
+                    onChange={(e) => setIncludeBlocks(e.target.checked)}
+                  />
+                  Include article content in link
+                </label>
+                <button
+                  type="button"
+                  role="menuitem"
+                  className="actions-menu-item"
+                  onClick={handleCopyLink}
+                >
+                  Copy share link
+                </button>
+              </div>
+
+              <div className="actions-menu-divider" role="separator" />
+
+              <div className="actions-menu-group">
+                <div className="actions-menu-label">Design handoff</div>
+                <button
+                  type="button"
+                  role="menuitem"
+                  className="actions-menu-item"
+                  onClick={handleCopyCss}
+                >
+                  Copy CSS
+                </button>
+                <button
+                  type="button"
+                  role="menuitem"
+                  className="actions-menu-item"
+                  onClick={handleCopySpecLink}
+                >
+                  Copy spec link
+                </button>
+                <button
+                  type="button"
+                  role="menuitem"
+                  className="actions-menu-item"
+                  onClick={handleOpenSpec}
+                >
+                  Open handoff
+                </button>
+              </div>
+
+              <div className="actions-menu-divider" role="separator" />
+
+              <div className="actions-menu-group">
+                <div className="actions-menu-label">Backup</div>
+                <button
+                  type="button"
+                  role="menuitem"
+                  className="actions-menu-item"
+                  onClick={() => handleExport(false)}
+                >
+                  Export JSON
+                </button>
+                <button
+                  type="button"
+                  role="menuitem"
+                  className="actions-menu-item"
+                  onClick={() => handleExport(true)}
+                >
+                  Export + content
+                </button>
+                <button
+                  type="button"
+                  role="menuitem"
+                  className="actions-menu-item"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  Import JSON
+                </button>
+              </div>
+            </div>
+          )}
+
           <input
             ref={fileInputRef}
             type="file"
