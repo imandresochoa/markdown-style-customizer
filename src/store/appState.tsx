@@ -57,7 +57,7 @@ function initState(): AppState {
       themeName: hashPayload.name,
       theme: { ...cloneDefaultTheme(), ...hashPayload.theme },
       blocks: hashPayload.blocks ?? defaultBlocks,
-      selectedSectionId: (hashPayload.blocks ?? defaultBlocks)[0]?.id ?? null,
+      selectedSectionId: null,
       presets: loadPresets(),
       toast: 'Theme loaded from share link',
     };
@@ -68,7 +68,7 @@ function initState(): AppState {
       themeName: session.themeName,
       theme: session.theme,
       blocks: session.blocks,
-      selectedSectionId: session.blocks[0]?.id ?? null,
+      selectedSectionId: null,
       presets: loadPresets(),
       toast: null,
     };
@@ -78,7 +78,7 @@ function initState(): AppState {
     themeName: 'My Theme',
     theme: cloneDefaultTheme(),
     blocks: defaultBlocks,
-    selectedSectionId: defaultBlocks[0]?.id ?? null,
+    selectedSectionId: null,
     presets: loadPresets(),
     toast: null,
   };
@@ -191,7 +191,7 @@ function reducer(state: AppState, action: Action): AppState {
         themeName: action.themeName,
         theme: { ...cloneDefaultTheme(), ...action.theme },
         blocks: action.blocks ?? state.blocks,
-        selectedSectionId: (action.blocks ?? state.blocks)[0]?.id ?? null,
+        selectedSectionId: null,
         toast: `Loaded "${action.themeName}"`,
       };
 
