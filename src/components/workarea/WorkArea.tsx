@@ -5,9 +5,7 @@ export function WorkArea() {
   return (
     <aside className="work-area">
       <ThemeActions />
-      <div className="work-area-scroll">
-        <StylePanel />
-      </div>
+      <StylePanel />
     </aside>
   );
 }

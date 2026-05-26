@@ -1,82 +1,88 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CONTROL_GROUPS } from '../../theme/controlGroups';
 import { useAppState } from '../../store/appState';
 import { StyleControl } from '../sidebar/StyleControl';
 import { SECTION_STYLE_GROUP } from '../../data/defaultBlocks';
 import { resolveFontSizePx } from '../../utils/sizeUnits';
-import { MaterialIcon } from '../icons/MaterialIcon';
-import { MATERIAL_ICONS } from '../icons/iconNames';
+
+const DEFAULT_TAB_ID = CONTROL_GROUPS[0]?.id ?? 'base';
 
 export function StylePanel() {
   const { state, dispatch } = useAppState();
-  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+  const [activeTabId, setActiveTabId] = useState(DEFAULT_TAB_ID);
 
   const baseFontSizePx = resolveFontSizePx(state.theme['--md-font-size'] ?? '16px');
 
-  const activeGroupId = state.selectedSectionId
+  const linkedGroupId = state.selectedSectionId
     ? SECTION_STYLE_GROUP[state.selectedSectionId]
     : null;
 
-  const toggleGroup = (id: string) => {
-    setCollapsed((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
+  useEffect(() => {
+    if (linkedGroupId) {
+      setActiveTabId(linkedGroupId);
+    }
+  }, [linkedGroupId]);
+
+  const activeGroup =
+    CONTROL_GROUPS.find((group) => group.id === activeTabId) ?? CONTROL_GROUPS[0];
 
   return (
-      <div className="work-panel work-panel--styles">
-        <div className="work-panel-header">Estilos</div>
-        <div className="style-groups">
+    <div className="work-panel work-panel--styles">
+      <div className="style-tabs" role="tablist" aria-label="Style groups">
         {CONTROL_GROUPS.map((group) => {
-          const isCollapsed = collapsed[group.id] ?? false;
-          const isHighlighted = activeGroupId === group.id;
+          const isActive = group.id === activeTabId;
+          const isLinked = linkedGroupId === group.id;
           return (
-            <div
+            <button
               key={group.id}
-              className={`control-group${isHighlighted ? ' control-group--highlight' : ''}`}
-              data-group-id={group.id}
+              type="button"
+              role="tab"
+              id={`style-tab-${group.id}`}
+              aria-selected={isActive}
+              aria-controls={`style-panel-${group.id}`}
+              className={`style-tab-pill${isActive ? ' style-tab-pill--active' : ''}${isLinked && !isActive ? ' style-tab-pill--linked' : ''}`}
+              onClick={() => setActiveTabId(group.id)}
             >
-              <div
-                className="control-group-header"
-                onClick={() => toggleGroup(group.id)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => e.key === 'Enter' && toggleGroup(group.id)}
-              >
-                <span className="control-group-label">
-                  <MaterialIcon
-                    name={isCollapsed ? MATERIAL_ICONS.chevronRight : MATERIAL_ICONS.expandMore}
-                    size={18}
-                    className="control-group-chevron"
-                  />
-                  {group.label}
-                </span>
-                <div className="control-group-actions" onClick={(e) => e.stopPropagation()}>
-                  <button
-                    type="button"
-                    className="btn btn-sm"
-                    onClick={() => dispatch({ type: 'RESET_GROUP', groupId: group.id })}
-                  >
-                    Reset
-                  </button>
-                </div>
-              </div>
-              {!isCollapsed && (
-                <div className="control-group-body">
-                  {group.controls.map((ctrl) => (
-                    <StyleControl
-                      key={ctrl.key}
-                      def={ctrl}
-                      value={state.theme[ctrl.key] ?? ''}
-                      baseFontSizePx={baseFontSizePx}
-                      onChange={(value) =>
-                        dispatch({ type: 'SET_THEME_VAR', key: ctrl.key, value })
-                      }
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
+              {group.label}
+            </button>
           );
         })}
+      </div>
+
+      <div className="style-tab-scroll">
+        {activeGroup && (
+          <div
+            className="style-tab-panel"
+            role="tabpanel"
+            id={`style-panel-${activeGroup.id}`}
+            aria-labelledby={`style-tab-${activeGroup.id}`}
+          >
+            <div className="style-tab-panel-header">
+              <h2 className="style-tab-panel-title">{activeGroup.label}</h2>
+              <button
+                type="button"
+                className="btn btn-sm"
+                onClick={() => dispatch({ type: 'RESET_GROUP', groupId: activeGroup.id })}
+              >
+                Reset
+              </button>
+            </div>
+
+            <div className="style-tab-panel-body">
+              {activeGroup.controls.map((ctrl) => (
+                <StyleControl
+                  key={ctrl.key}
+                  def={ctrl}
+                  value={state.theme[ctrl.key] ?? ''}
+                  baseFontSizePx={baseFontSizePx}
+                  onChange={(value) =>
+                    dispatch({ type: 'SET_THEME_VAR', key: ctrl.key, value })
+                  }
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="style-reset-all">
           <button type="button" className="btn" onClick={() => dispatch({ type: 'RESET_ALL' })}>
