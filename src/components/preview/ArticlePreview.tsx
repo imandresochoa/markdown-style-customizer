@@ -35,7 +35,7 @@ export function ArticlePreview() {
     dispatch({ type: 'REORDER_BLOCKS', fromIndex, toIndex });
   };
 
-  const handleCanvasClick = (e: React.MouseEvent) => {
+  const handleViewportClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       dispatch({ type: 'SELECT_SECTION', id: null });
     }
@@ -43,27 +43,29 @@ export function ArticlePreview() {
 
   return (
     <main className="article-zone">
-      <div className="article-canvas" onClick={handleCanvasClick}>
-        <div className="article-page">
-          <div className="md-preview" style={themeToStyle(state.theme)}>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleDragEnd}
+      <PreviewToolbar />
+      <div
+        className="article-viewport md-preview"
+        style={themeToStyle(state.theme)}
+        onClick={handleViewportClick}
+      >
+        <div className="article-viewport-inner">
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={state.blocks.map((b) => b.id)}
+              strategy={verticalListSortingStrategy}
             >
-              <SortableContext
-                items={state.blocks.map((b) => b.id)}
-                strategy={verticalListSortingStrategy}
-              >
-                {state.blocks.map((block) => (
-                  <ArticleSection key={block.id} block={block} />
-                ))}
-              </SortableContext>
-            </DndContext>
-          </div>
+              {state.blocks.map((block) => (
+                <ArticleSection key={block.id} block={block} />
+              ))}
+            </SortableContext>
+          </DndContext>
         </div>
       </div>
-      <PreviewToolbar />
     </main>
   );
 }

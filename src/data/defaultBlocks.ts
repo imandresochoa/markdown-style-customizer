@@ -4,6 +4,8 @@ function block(id: string, label: string, markdown: string): MarkdownBlock {
   return { id, label, markdown };
 }
 
+const ROBOTIC_SURGERY_IMAGE = '/images/wbamc-robotic-surgery.jpg';
+
 export const DEFAULT_BLOCKS: MarkdownBlock[] = [
   block(
     'title',
@@ -14,6 +16,11 @@ export const DEFAULT_BLOCKS: MarkdownBlock[] = [
     'intro',
     'Introducción',
     'La inteligencia artificial está transformando radicalmente el panorama de la atención médica. Desde el diagnóstico temprano de enfermedades hasta la personalización de tratamientos, los algoritmos de aprendizaje automático están demostrando capacidades que antes parecían imposibles.',
+  ),
+  block(
+    'p-emphasis',
+    'Énfasis',
+    'En la práctica clínica conviven **resultados medibles**, *juicio experto* y ~~suposiciones obsoletas~~ que aún orientan el debate sobre cómo integrar la IA en los equipos asistenciales.',
   ),
   block(
     'h2-diagnostico',
@@ -136,6 +143,51 @@ export const DEFAULT_BLOCKS: MarkdownBlock[] = [
     '| Área de Aplicación | Impacto Esperado | Inversión 2024 |\n| --- | --- | --- |\n| Diagnóstico por imagen | Alto | $15.4B |\n| Descubrimiento de fármacos | Muy alto | $12.8B |\n| Asistentes virtuales | Medio | $8.2B |\n| Cirugía robótica | Alto | $10.1B |',
   ),
   block(
+    'h3-robotica',
+    'Subsección H3 — Cirugía robótica',
+    '### Cirugía Robótica Asistida por IA',
+  ),
+  block(
+    'p-robotica',
+    'Párrafo — Cirugía robótica',
+    'La convergencia entre robots quirúrgicos e inteligencia artificial permite intervenciones más precisas, con menor sangrado y recuperaciones más rápidas. Los sistemas combinan visión aumentada, planificación asistida y control en tiempo real.',
+  ),
+  block(
+    'img-robotica',
+    'Imagen',
+    `![Sistema de cirugía robótica en William Beaumont Army Medical Center](${ROBOTIC_SURGERY_IMAGE})`,
+  ),
+  block(
+    'h4-robotica',
+    'Subsección H4 — Precisión',
+    '#### Precisión en el Quirófano',
+  ),
+  block(
+    'p-h4-robotica',
+    'Párrafo — Precisión',
+    'Los brazos robóticos filtran el temblor manual y escalan los movimientos del cirujano, lo que resulta especialmente valioso en procedimientos de alta complejidad como reanastomosis tubáricas o microcirugía.',
+  ),
+  block(
+    'h5-robotica',
+    'Subsección H5 — Monitorización',
+    '##### Monitorización en Tiempo Real',
+  ),
+  block(
+    'p-h5-robotica',
+    'Párrafo — Monitorización',
+    'Sensores y modelos predictivos pueden alertar sobre desviaciones durante la operación, ayudando al equipo a tomar decisiones antes de que aparezcan complicaciones visibles.',
+  ),
+  block(
+    'h6-robotica',
+    'Subsección H6 — Formación',
+    '###### Formación del Equipo Médico',
+  ),
+  block(
+    'p-h6-robotica',
+    'Párrafo — Formación',
+    'La simulación asistida por IA acelera la curva de aprendizaje de residentes y enfermeras instrumentistas, estandarizando protocolos sin sustituir la supervisión clínica.',
+  ),
+  block(
     'h3-iot',
     'Subsección H3 — IoT médico',
     '### Integración con IoT Médico',
@@ -175,6 +227,7 @@ export function findDefaultBlock(id: string): MarkdownBlock | undefined {
 export const SECTION_STYLE_GROUP: Record<string, string> = {
   title: 'h1',
   intro: 'paragraph',
+  'p-emphasis': 'emphasis',
   'h2-diagnostico': 'h2',
   'p-diagnostico': 'paragraph',
   'h3-cancer': 'h3',
@@ -199,6 +252,15 @@ export const SECTION_STYLE_GROUP: Record<string, string> = {
   'h2-futuro': 'h2',
   'p-futuro': 'paragraph',
   table: 'table',
+  'h3-robotica': 'h3',
+  'p-robotica': 'paragraph',
+  'img-robotica': 'hr-image',
+  'h4-robotica': 'h4',
+  'p-h4-robotica': 'paragraph',
+  'h5-robotica': 'h5',
+  'p-h5-robotica': 'paragraph',
+  'h6-robotica': 'h6',
+  'p-h6-robotica': 'paragraph',
   'h3-iot': 'h3',
   'p-iot': 'links',
   'h2-conclusion': 'h2',

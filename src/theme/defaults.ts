@@ -6,7 +6,7 @@ export const DEFAULT_THEME: ThemeVariables = {
   '--md-font-size': '16px',
   '--md-line-height': '1.65',
   '--md-text-color': '#1a202c',
-  '--md-bg-color': '#ffffff',
+  '--md-bg-color': '#fafafa',
   '--md-content-max-width': '720px',
   '--md-content-padding': '32px',
 

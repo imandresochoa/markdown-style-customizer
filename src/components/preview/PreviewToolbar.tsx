@@ -3,40 +3,52 @@ import { BLOCK_TEMPLATES } from '../../data/blockTemplates';
 import { findDefaultBlock } from '../../data/defaultBlocks';
 import { useAppState } from '../../store/appState';
 
-const TOOLBAR_VISIBLE_KEY = 'preview-toolbar-visible';
-
-function isMac(): boolean {
-  return typeof navigator !== 'undefined' && /Mac|iPhone|iPad|iPod/.test(navigator.platform);
-}
-
-function shortcutLabel(): string {
-  return isMac() ? '⌘.' : 'Ctrl+.';
-}
-
-function loadVisible(): boolean {
-  try {
-    const raw = localStorage.getItem(TOOLBAR_VISIBLE_KEY);
-    return raw === null ? true : raw === 'true';
-  } catch {
-    return true;
-  }
-}
-
 function IconAdd() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-      <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
+      <path d="M8 3.5v9M3.5 8h9" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
     </svg>
   );
 }
 
-function IconTrash() {
+function IconRemoveBlock() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
       <path
-        d="M3.5 5h9M6 5V3.5h4V5M5.5 5l.5 8h4l.5-8"
+        d="M2.75 4.25h10.5M6 4.25V3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1.25M5.25 4.25l.55 8.25a.75.75 0 0 0 .75.7h3.1a.75.75 0 0 0 .75-.7l.55-8.25"
         stroke="currentColor"
-        strokeWidth="1.5"
+        strokeWidth="1.35"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      <path d="M6.75 7v4.25M9.25 7v4.25" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function IconRestoreContent() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+      <path
+        d="M4.25 3.5v3h3"
+        stroke="currentColor"
+        strokeWidth="1.35"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      <path
+        d="M7.25 3.75A5 5 0 1 0 12 8"
+        stroke="currentColor"
+        strokeWidth="1.35"
+        strokeLinecap="round"
+        fill="none"
+      />
+      <path
+        d="M5.5 8.75h4.25a1.75 1.75 0 0 0 0-3.5H7.75"
+        stroke="currentColor"
+        strokeWidth="1.35"
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
@@ -45,40 +57,8 @@ function IconTrash() {
   );
 }
 
-function IconReset() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-      <path
-        d="M4 4.5A5 5 0 1 1 4 10"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        fill="none"
-      />
-      <path d="M4 2v3h3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" fill="none" />
-    </svg>
-  );
-}
-
-function IconHide() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-      <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function IconToolbar() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-      <path d="M2.5 4h11M2.5 8h11M2.5 12h11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}
-
 export function PreviewToolbar() {
   const { state, dispatch } = useAppState();
-  const [visible, setVisible] = useState(loadVisible);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -86,30 +66,9 @@ export function PreviewToolbar() {
   const selectedIndex = selected
     ? state.blocks.findIndex((b) => b.id === selected.id)
     : -1;
-
-  const toggleVisible = () => {
-    setVisible((v) => {
-      const next = !v;
-      localStorage.setItem(TOOLBAR_VISIBLE_KEY, String(next));
-      if (!next) setMenuOpen(false);
-      return next;
-    });
-  };
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!(e.metaKey || e.ctrlKey) || e.key !== '.') return;
-      e.preventDefault();
-      setVisible((v) => {
-        const next = !v;
-        localStorage.setItem(TOOLBAR_VISIBLE_KEY, String(next));
-        return next;
-      });
-      setMenuOpen(false);
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  const canRemove = Boolean(selected && state.blocks.length > 1);
+  const canRestore = Boolean(selected && findDefaultBlock(selected.id));
+  const hasSelectionActions = canRemove || canRestore;
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -132,34 +91,18 @@ export function PreviewToolbar() {
   };
 
   const handleDelete = () => {
-    if (!selected) return;
+    if (!selected || !canRemove) return;
     dispatch({ type: 'DELETE_BLOCK', id: selected.id });
   };
 
   const handleReset = () => {
-    if (!selected) return;
+    if (!selected || !canRestore) return;
     const defaultBlock = findDefaultBlock(selected.id);
     if (defaultBlock) {
       dispatch({ type: 'RESET_BLOCK', id: selected.id, markdown: defaultBlock.markdown });
       dispatch({ type: 'SET_TOAST', message: 'Block reset' });
-    } else {
-      dispatch({ type: 'SET_TOAST', message: 'No default for this block' });
     }
   };
-
-  if (!visible) {
-    return (
-      <button
-        type="button"
-        className="preview-toolbar-fab"
-        onClick={toggleVisible}
-        aria-label="Show toolbar"
-        title={`Show toolbar (${shortcutLabel()})`}
-      >
-        <IconToolbar />
-      </button>
-    );
-  }
 
   return (
     <div className="preview-toolbar-float" role="toolbar" aria-label="Block actions">
@@ -172,7 +115,7 @@ export function PreviewToolbar() {
             aria-expanded={menuOpen}
             aria-haspopup="menu"
             aria-label="Add block"
-            title="Add block"
+            title="Add block below selection…"
           >
             <IconAdd />
           </button>
@@ -193,44 +136,42 @@ export function PreviewToolbar() {
           )}
         </div>
 
-        <button
-          type="button"
-          className="preview-toolbar-icon preview-toolbar-icon--danger"
-          disabled={!selected || state.blocks.length <= 1}
-          onClick={handleDelete}
-          aria-label="Delete block"
-          title="Delete block"
-        >
-          <IconTrash />
-        </button>
+        {hasSelectionActions && (
+          <div className="preview-toolbar-selection">
+            {canRemove && (
+              <button
+                type="button"
+                className="preview-toolbar-icon preview-toolbar-icon--danger"
+                onClick={handleDelete}
+                aria-label="Remove selected block"
+                title="Remove selected block"
+              >
+                <IconRemoveBlock />
+              </button>
+            )}
 
-        <button
-          type="button"
-          className="preview-toolbar-icon"
-          disabled={!selected}
-          onClick={handleReset}
-          aria-label="Reset block"
-          title="Reset block"
-        >
-          <IconReset />
-        </button>
+            {canRestore && (
+              <button
+                type="button"
+                className="preview-toolbar-icon"
+                onClick={handleReset}
+                aria-label="Restore original content"
+                title="Restore original content"
+              >
+                <IconRestoreContent />
+              </button>
+            )}
 
-        <span
-          className="preview-toolbar-badge"
-          title={selected ? selected.label : 'No block selected'}
-        >
-          {selected ? `${selectedIndex + 1}/${state.blocks.length}` : '—'}
-        </span>
-
-        <button
-          type="button"
-          className="preview-toolbar-icon preview-toolbar-icon--ghost"
-          onClick={toggleVisible}
-          aria-label="Hide toolbar"
-          title={`Hide toolbar (${shortcutLabel()})`}
-        >
-          <IconHide />
-        </button>
+            {selected && (
+              <span
+                className="preview-toolbar-badge"
+                title={selected.label}
+              >
+                {selectedIndex + 1}/{state.blocks.length}
+              </span>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
