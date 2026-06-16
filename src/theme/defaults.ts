@@ -1,7 +1,8 @@
 export type ThemeVariables = Record<string, string>;
 
 export const DEFAULT_THEME: ThemeVariables = {
-  // Accent (seed color for the accent picker; not consumed directly by the preview)
+  // Global colors (seed values for the pickers; not consumed directly by the preview)
+  '--md-ink': '#1a202c',
   '--md-accent': '#2563eb',
 
   // Base

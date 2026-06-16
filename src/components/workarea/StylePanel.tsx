@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { CONTROL_GROUPS } from '../../theme/controlGroups';
 import { useAppState } from '../../store/appState';
 import { StyleControl } from '../sidebar/StyleControl';
-import { AccentControl } from '../sidebar/AccentControl';
+import { GlobalColors } from '../sidebar/GlobalColors';
 import { SECTION_STYLE_GROUP } from '../../data/defaultBlocks';
 import { resolveFontSizePx } from '../../utils/sizeUnits';
 
@@ -29,7 +29,7 @@ export function StylePanel() {
 
   return (
     <div className="work-panel work-panel--styles">
-      <AccentControl />
+      <GlobalColors />
 
       <div className="style-tabs" role="tablist" aria-label="Style groups">
         {CONTROL_GROUPS.map((group) => {

@@ -39,6 +39,7 @@ export type AppState = {
 type Action =
   | { type: 'SET_THEME_VAR'; key: string; value: string }
   | { type: 'SET_ACCENT'; color: string }
+  | { type: 'SET_INK'; color: string }
   | { type: 'SET_THEME_NAME'; name: string }
   | { type: 'RESET_GROUP'; groupId: string }
   | { type: 'RESET_ALL' }
@@ -127,7 +128,6 @@ function reducer(state: AppState, action: Action): AppState {
         '--md-a-color': base,
         '--md-a-hover-color': hover,
         '--md-task-checkbox-accent': base,
-        '--md-li-marker-color': base,
         '--md-blockquote-border-color': base,
         '--md-code-color': codeInk,
         '--md-code-bg': codeBg,
@@ -143,6 +143,31 @@ function reducer(state: AppState, action: Action): AppState {
           state.theme['--md-h2-border-bottom'] ?? '',
           borderTint,
         ),
+      };
+      return { ...state, theme };
+    }
+
+    case 'SET_INK': {
+      const base = action.color;
+      const soft = mixWithWhite(base, 0.72);
+      const faint = mixWithWhite(base, 0.5);
+
+      const theme: ThemeVariables = {
+        ...state.theme,
+        '--md-ink': base,
+        '--md-text-color': base,
+        '--md-h1-color': base,
+        '--md-h2-color': base,
+        '--md-h3-color': base,
+        '--md-h4-color': base,
+        '--md-h5-color': base,
+        '--md-h6-color': base,
+        '--md-p-color': base,
+        '--md-strong-color': base,
+        '--md-em-color': base,
+        '--md-li-marker-color': base,
+        '--md-blockquote-color': soft,
+        '--md-del-color': faint,
       };
       return { ...state, theme };
     }
