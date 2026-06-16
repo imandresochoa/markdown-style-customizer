@@ -1,6 +1,9 @@
 export type ThemeVariables = Record<string, string>;
 
 export const DEFAULT_THEME: ThemeVariables = {
+  // Accent (seed color for the accent picker; not consumed directly by the preview)
+  '--md-accent': '#2563eb',
+
   // Base
   '--md-font-family': 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
   '--md-font-size': '16px',

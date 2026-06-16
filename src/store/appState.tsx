@@ -7,6 +7,12 @@ import {
   type Dispatch,
 } from 'react';
 import { cloneDefaultTheme, DEFAULT_THEME, type ThemeVariables } from '../theme/defaults';
+import {
+  darken,
+  mixWithWhite,
+  readableInk,
+  replaceColorInShorthand,
+} from '../utils/color';
 import { cloneDefaultBlocks } from '../data/defaultBlocks';
 import { BLOCK_TEMPLATES, createBlockFromTemplate } from '../data/blockTemplates';
 import type { MarkdownBlock, SavedThemePreset } from '../theme/schema';
@@ -32,6 +38,7 @@ export type AppState = {
 
 type Action =
   | { type: 'SET_THEME_VAR'; key: string; value: string }
+  | { type: 'SET_ACCENT'; color: string }
   | { type: 'SET_THEME_NAME'; name: string }
   | { type: 'RESET_GROUP'; groupId: string }
   | { type: 'RESET_ALL' }
@@ -104,6 +111,41 @@ function reducer(state: AppState, action: Action): AppState {
         ...state,
         theme: { ...state.theme, [action.key]: action.value },
       };
+
+    case 'SET_ACCENT': {
+      const base = action.color;
+      const hover = darken(base, 0.15);
+      const codeInk = readableInk(base);
+      const borderTint = mixWithWhite(base, 0.3);
+      const headerBg = mixWithWhite(base, 0.12);
+      const codeBg = mixWithWhite(base, 0.09);
+      const stripeBg = mixWithWhite(base, 0.06);
+
+      const theme: ThemeVariables = {
+        ...state.theme,
+        '--md-accent': base,
+        '--md-a-color': base,
+        '--md-a-hover-color': hover,
+        '--md-task-checkbox-accent': base,
+        '--md-li-marker-color': base,
+        '--md-blockquote-border-color': base,
+        '--md-code-color': codeInk,
+        '--md-code-bg': codeBg,
+        '--md-th-bg': headerBg,
+        '--md-tr-stripe-bg': stripeBg,
+        '--md-table-border-color': borderTint,
+        '--md-hr-color': borderTint,
+        '--md-h1-border-bottom': replaceColorInShorthand(
+          state.theme['--md-h1-border-bottom'] ?? '',
+          borderTint,
+        ),
+        '--md-h2-border-bottom': replaceColorInShorthand(
+          state.theme['--md-h2-border-bottom'] ?? '',
+          borderTint,
+        ),
+      };
+      return { ...state, theme };
+    }
 
     case 'SET_THEME_NAME':
       return { ...state, themeName: action.name };
