@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { CONTROL_GROUPS } from '../../theme/controlGroups';
 import { useAppState } from '../../store/appState';
 import { StyleControl } from '../sidebar/StyleControl';
 import { GlobalColors } from '../sidebar/GlobalColors';
+import { StyleElementNav } from '../sidebar/StyleElementNav';
 import { SECTION_STYLE_GROUP } from '../../data/defaultBlocks';
 import { resolveFontSizePx } from '../../utils/sizeUnits';
 
@@ -18,11 +19,11 @@ export function StylePanel() {
     ? SECTION_STYLE_GROUP[state.selectedSectionId]
     : null;
 
-  useEffect(() => {
-    if (linkedGroupId) {
-      setActiveTabId(linkedGroupId);
-    }
-  }, [linkedGroupId]);
+  const [prevLinkedGroupId, setPrevLinkedGroupId] = useState(linkedGroupId);
+  if (linkedGroupId && linkedGroupId !== prevLinkedGroupId) {
+    setPrevLinkedGroupId(linkedGroupId);
+    setActiveTabId(linkedGroupId);
+  }
 
   const activeGroup =
     CONTROL_GROUPS.find((group) => group.id === activeTabId) ?? CONTROL_GROUPS[0];
@@ -31,66 +32,53 @@ export function StylePanel() {
     <div className="work-panel work-panel--styles">
       <GlobalColors />
 
-      <div className="style-tabs" role="tablist" aria-label="Style groups">
-        {CONTROL_GROUPS.map((group) => {
-          const isActive = group.id === activeTabId;
-          const isLinked = linkedGroupId === group.id;
-          return (
-            <button
-              key={group.id}
-              type="button"
-              role="tab"
-              id={`style-tab-${group.id}`}
-              aria-selected={isActive}
-              aria-controls={`style-panel-${group.id}`}
-              className={`style-tab-pill${isActive ? ' style-tab-pill--active' : ''}${isLinked && !isActive ? ' style-tab-pill--linked' : ''}`}
-              onClick={() => setActiveTabId(group.id)}
+      <div className="style-panel-split">
+        <StyleElementNav
+          activeId={activeTabId}
+          linkedId={linkedGroupId}
+          onSelect={setActiveTabId}
+        />
+
+        <div className="style-tab-scroll">
+          {activeGroup && (
+            <div
+              className="style-tab-panel"
+              role="tabpanel"
+              id={`style-panel-${activeGroup.id}`}
+              aria-labelledby={`style-nav-${activeGroup.id}`}
             >
-              {group.label}
+              <div className="style-tab-toolbar">
+                <span className="style-tab-toolbar-title">{activeGroup.label}</span>
+                <button
+                  type="button"
+                  className="btn btn-sm"
+                  onClick={() => dispatch({ type: 'RESET_GROUP', groupId: activeGroup.id })}
+                >
+                  Reset
+                </button>
+              </div>
+
+              <div className="style-tab-panel-body">
+                {activeGroup.controls.map((ctrl) => (
+                  <StyleControl
+                    key={ctrl.key}
+                    def={ctrl}
+                    value={state.theme[ctrl.key] ?? ''}
+                    baseFontSizePx={baseFontSizePx}
+                    onChange={(value) =>
+                      dispatch({ type: 'SET_THEME_VAR', key: ctrl.key, value })
+                    }
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="style-reset-all">
+            <button type="button" className="btn" onClick={() => dispatch({ type: 'RESET_ALL' })}>
+              Reset all styles
             </button>
-          );
-        })}
-      </div>
-
-      <div className="style-tab-scroll">
-        {activeGroup && (
-          <div
-            className="style-tab-panel"
-            role="tabpanel"
-            id={`style-panel-${activeGroup.id}`}
-            aria-labelledby={`style-tab-${activeGroup.id}`}
-          >
-            <div className="style-tab-panel-header">
-              <h2 className="style-tab-panel-title">{activeGroup.label}</h2>
-              <button
-                type="button"
-                className="btn btn-sm"
-                onClick={() => dispatch({ type: 'RESET_GROUP', groupId: activeGroup.id })}
-              >
-                Reset
-              </button>
-            </div>
-
-            <div className="style-tab-panel-body">
-              {activeGroup.controls.map((ctrl) => (
-                <StyleControl
-                  key={ctrl.key}
-                  def={ctrl}
-                  value={state.theme[ctrl.key] ?? ''}
-                  baseFontSizePx={baseFontSizePx}
-                  onChange={(value) =>
-                    dispatch({ type: 'SET_THEME_VAR', key: ctrl.key, value })
-                  }
-                />
-              ))}
-            </div>
           </div>
-        )}
-
-        <div className="style-reset-all">
-          <button type="button" className="btn" onClick={() => dispatch({ type: 'RESET_ALL' })}>
-            Reset all styles
-          </button>
         </div>
       </div>
     </div>

@@ -156,3 +156,55 @@ export function getGroupVariableKeys(groupId: string): string[] {
   const group = CONTROL_GROUPS.find((g) => g.id === groupId);
   return group?.controls.map((c) => c.key) ?? [];
 }
+
+export type StyleNavItem = {
+  id: string;
+  label: string;
+};
+
+export type StyleNavCategory = {
+  label: string;
+  items: StyleNavItem[];
+};
+
+function navItem(id: string, label: string): StyleNavItem {
+  return { id, label };
+}
+
+/** Grouped element nav for the style panel sidebar. */
+export const STYLE_NAV_CATEGORIES: StyleNavCategory[] = [
+  {
+    label: 'General',
+    items: [navItem('base', 'Base')],
+  },
+  {
+    label: 'Títulos',
+    items: [1, 2, 3, 4, 5, 6].map((n) => navItem(`h${n}`, `H${n}`)),
+  },
+  {
+    label: 'Texto',
+    items: [
+      navItem('paragraph', 'Párrafo'),
+      navItem('links', 'Enlaces'),
+      navItem('emphasis', 'Énfasis'),
+    ],
+  },
+  {
+    label: 'Código',
+    items: [navItem('inline-code', 'Inline'), navItem('code-block', 'Bloque')],
+  },
+  {
+    label: 'Bloques',
+    items: [
+      navItem('blockquote', 'Cita'),
+      navItem('lists', 'Listas'),
+      navItem('task-list', 'Tareas'),
+      navItem('table', 'Tabla'),
+      navItem('hr-image', 'HR / Img'),
+    ],
+  },
+];
+
+export const STYLE_NAV_ITEMS: StyleNavItem[] = STYLE_NAV_CATEGORIES.flatMap(
+  (category) => category.items,
+);
