@@ -1,5 +1,6 @@
 import type { StyleControlDef } from '../../theme/controlGroups';
 import { convertSizeUnit, parseSize, type SizeUnit } from '../../utils/sizeUnits';
+import { FontPicker } from './FontPicker';
 
 type Props = {
   def: StyleControlDef;
@@ -39,6 +40,20 @@ export function StyleControl({ def, value, baseFontSizePx, onChange }: Props) {
             aria-label={`${def.label} value`}
           />
         </div>
+      </div>
+    );
+  }
+
+  if (def.type === 'font') {
+    return (
+      <div className="control-row">
+        <label>{def.label}</label>
+        <FontPicker
+          value={value}
+          categories={def.fontCategories}
+          onChange={onChange}
+          ariaLabel={def.label}
+        />
       </div>
     );
   }

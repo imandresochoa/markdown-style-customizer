@@ -1,12 +1,15 @@
 import type { ThemeVariables } from './defaults';
+import type { FontCategory } from '../data/fonts';
 
-export type ControlType = 'color' | 'text' | 'select' | 'size';
+export type ControlType = 'color' | 'text' | 'select' | 'size' | 'font';
 
 export type StyleControlDef = {
   key: keyof ThemeVariables | string;
   label: string;
   type: ControlType;
   options?: string[];
+  /** For `font` controls: which font categories to offer in the picker. */
+  fontCategories?: FontCategory[];
 };
 
 export type ControlGroup = {
@@ -29,7 +32,7 @@ export const CONTROL_GROUPS: ControlGroup[] = [
     id: 'base',
     label: 'Base',
     controls: [
-      { key: '--md-font-family', label: 'Font family', type: 'text' },
+      { key: '--md-font-family', label: 'Font family', type: 'font', fontCategories: ['sans', 'serif'] },
       { key: '--md-font-size', label: 'Font size', type: 'size' },
       { key: '--md-line-height', label: 'Line height', type: 'text' },
       { key: '--md-text-color', label: 'Text color', type: 'color' },
@@ -80,7 +83,7 @@ export const CONTROL_GROUPS: ControlGroup[] = [
       { key: '--md-code-bg', label: 'Background', type: 'color' },
       { key: '--md-code-padding', label: 'Padding', type: 'text' },
       { key: '--md-code-radius', label: 'Border radius', type: 'size' },
-      { key: '--md-code-font-family', label: 'Font family', type: 'text' },
+      { key: '--md-code-font-family', label: 'Font family', type: 'font', fontCategories: ['mono'] },
     ],
   },
   {

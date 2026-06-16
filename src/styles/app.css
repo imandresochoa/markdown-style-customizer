@@ -761,6 +761,126 @@
   flex-shrink: 0;
 }
 
+.font-picker {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.font-picker-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: #ffffff;
+  font-size: 0.875rem;
+  cursor: pointer;
+  text-align: left;
+}
+
+.font-picker-trigger:hover {
+  border-color: #9ca3af;
+}
+
+.font-picker-trigger-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.font-picker-chevron {
+  flex-shrink: 0;
+  color: #6b7280;
+  font-size: 0.75rem;
+}
+
+.font-picker-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 50;
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 4px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(17, 24, 39, 0.12);
+}
+
+.font-picker-group + .font-picker-group {
+  margin-top: 4px;
+}
+
+.font-picker-group-label {
+  padding: 6px 8px 2px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #9ca3af;
+}
+
+.font-picker-option {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 8px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-align: left;
+}
+
+.font-picker-option:hover {
+  background: #f3f4f6;
+}
+
+.font-picker-option--active {
+  background: #eef2ff;
+  box-shadow: inset 0 0 0 1px #c7d2fe;
+}
+
+.font-picker-option-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.font-picker-option-sample {
+  flex-shrink: 0;
+  color: #6b7280;
+}
+
+.font-picker-divider {
+  height: 1px;
+  margin: 4px 4px;
+  background: #f3f4f6;
+}
+
+.font-picker-custom {
+  font-size: 0.8125rem;
+  color: #4b5563;
+}
+
+.font-picker-custom-input {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.8125rem;
+}
+
 .btn {
   padding: 6px 10px;
   border: 1px solid #d1d5db;
