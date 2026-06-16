@@ -15,6 +15,11 @@ const SAMPLE_IMAGE = 'https://picsum.photos/seed/stylesheet/600/240';
 /** Default preview blocks — one sample per markdown element, like a style sheet. */
 export const DEFAULT_BLOCKS: MarkdownBlock[] = [
   block('title', 'Título (H1)', '# This is an Headline 1'),
+  block('h2', 'Heading 2', '## This is an Headline 2'),
+  block('h3', 'Heading 3', '### This is an Headline 3'),
+  block('h4', 'Heading 4', '#### This is an Headline 4'),
+  block('h5', 'Heading 5', '##### This is an Headline 5'),
+  block('h6', 'Heading 6', '###### This is an Headline 6'),
   block('intro', 'Párrafo 1', LOREM_P1),
   block('p-second', 'Párrafo 2', LOREM_P2),
   block(
@@ -22,11 +27,6 @@ export const DEFAULT_BLOCKS: MarkdownBlock[] = [
     'Énfasis',
     'Texto con **negrita**, *cursiva* y ~~tachado~~ para previsualizar los estilos de énfasis.',
   ),
-  block('h2', 'Heading 2', '## This is an Headline 2'),
-  block('h3', 'Heading 3', '### This is an Headline 3'),
-  block('h4', 'Heading 4', '#### This is an Headline 4'),
-  block('h5', 'Heading 5', '##### This is an Headline 5'),
-  block('h6', 'Heading 6', '###### This is an Headline 6'),
   block(
     'p-links',
     'Enlace',

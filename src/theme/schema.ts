@@ -84,7 +84,7 @@ export function decodeSpecShareUrl(hash: string): SpecPayload | null {
 const STORAGE_KEY = 'md-style-customizer-session';
 const PRESETS_KEY = 'md-style-customizer-presets';
 /** Bump when default article content changes so saved sessions pick up new blocks */
-export const CONTENT_VERSION = 4;
+export const CONTENT_VERSION = 5;
 
 export function createSharedPayload(
   name: string,
