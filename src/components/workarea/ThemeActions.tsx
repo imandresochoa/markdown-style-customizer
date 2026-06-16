@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useAppState } from '../../store/appState';
 import {
+  blocksToMarkdown,
   createSharedPayload,
   createSpecPayload,
+  downloadFile,
   downloadJson,
   encodeShareUrl,
   encodeSpecShareUrl,
@@ -41,6 +43,14 @@ export function ThemeActions() {
     const slug = state.themeName.toLowerCase().replace(/\s+/g, '-');
     downloadJson(payload, `${slug || 'theme'}.json`);
     dispatch({ type: 'SET_TOAST', message: 'Plantilla exportada' });
+    closeMenu();
+  };
+
+  const handleExportMarkdown = () => {
+    const markdown = blocksToMarkdown(state.blocks);
+    const slug = state.themeName.toLowerCase().replace(/\s+/g, '-');
+    downloadFile(markdown, `${slug || 'contenido'}.md`, 'text/markdown');
+    dispatch({ type: 'SET_TOAST', message: 'Markdown exportado' });
     closeMenu();
   };
 
@@ -150,10 +160,7 @@ export function ThemeActions() {
   };
 
   return (
-    <div className="sidebar-header">
-      <h1>Markdown Style Customizer</h1>
-      <p className="sidebar-lead">Edita los estilos aquí. Haz clic en los bloques de la vista previa para editar el contenido.</p>
-
+    <div className="work-area-scroll document-panel">
       <section className="sidebar-section">
         <h2 className="sidebar-section-label">Plantilla</h2>
         <div className="sidebar-name-row">
@@ -329,6 +336,14 @@ export function ThemeActions() {
                   onClick={() => handleExport(true)}
                 >
                   Exportar + contenido
+                </button>
+                <button
+                  type="button"
+                  role="menuitem"
+                  className="actions-menu-item"
+                  onClick={handleExportMarkdown}
+                >
+                  Exportar Markdown (.md)
                 </button>
                 <button
                   type="button"

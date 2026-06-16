@@ -146,14 +146,22 @@ export function decodeShareUrl(hash: string): SharedPayload | null {
   }
 }
 
-export function downloadJson(payload: SharedPayload, filename: string): void {
-  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+export function downloadFile(content: string, filename: string, mime: string): void {
+  const blob = new Blob([content], { type: mime });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
   a.download = filename;
   a.click();
   URL.revokeObjectURL(url);
+}
+
+export function downloadJson(payload: SharedPayload, filename: string): void {
+  downloadFile(JSON.stringify(payload, null, 2), filename, 'application/json');
+}
+
+export function blocksToMarkdown(blocks: MarkdownBlock[]): string {
+  return blocks.map((block) => block.markdown.trim()).join('\n\n') + '\n';
 }
 
 export async function readJsonFile(file: File): Promise<SharedPayload | null> {
