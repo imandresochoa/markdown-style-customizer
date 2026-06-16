@@ -4,215 +4,71 @@ function block(id: string, label: string, markdown: string): MarkdownBlock {
   return { id, label, markdown };
 }
 
-const ROBOTIC_SURGERY_IMAGE = '/images/wbamc-robotic-surgery.jpg';
+const LOREM_P1 =
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.';
 
+const LOREM_P2 =
+  'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Curabitur pretium tincidunt lacus, sed gravida urna facilisis at. Nullam quis risus eget urna mollis ornare vel eu leo, cum sociis natoque penatibus et magnis dis parturient montes.';
+
+const SAMPLE_IMAGE = 'https://picsum.photos/seed/stylesheet/600/240';
+
+/** Default preview blocks — one sample per markdown element, like a style sheet. */
 export const DEFAULT_BLOCKS: MarkdownBlock[] = [
-  block(
-    'title',
-    'Título (H1)',
-    '# La Revolución de la Inteligencia Artificial en la Medicina Moderna',
-  ),
-  block(
-    'intro',
-    'Introducción',
-    'La inteligencia artificial está transformando radicalmente el panorama de la atención médica. Desde el diagnóstico temprano de enfermedades hasta la personalización de tratamientos, los algoritmos de aprendizaje automático están demostrando capacidades que antes parecían imposibles.',
-  ),
+  block('title', 'Título (H1)', '# This is an Headline 1'),
+  block('intro', 'Párrafo 1', LOREM_P1),
+  block('p-second', 'Párrafo 2', LOREM_P2),
   block(
     'p-emphasis',
     'Énfasis',
-    'En la práctica clínica conviven **resultados medibles**, *juicio experto* y ~~suposiciones obsoletas~~ que aún orientan el debate sobre cómo integrar la IA en los equipos asistenciales.',
+    'Texto con **negrita**, *cursiva* y ~~tachado~~ para previsualizar los estilos de énfasis.',
+  ),
+  block('h2', 'Heading 2', '## This is an Headline 2'),
+  block('h3', 'Heading 3', '### This is an Headline 3'),
+  block('h4', 'Heading 4', '#### This is an Headline 4'),
+  block('h5', 'Heading 5', '##### This is an Headline 5'),
+  block('h6', 'Heading 6', '###### This is an Headline 6'),
+  block(
+    'p-links',
+    'Enlace',
+    'Párrafo con un [enlace de ejemplo](https://example.com) para ver los estilos de links.',
   ),
   block(
-    'h2-diagnostico',
-    'Sección H2 — Diagnóstico',
-    '## Diagnóstico Asistido por IA',
+    'p-inline-code',
+    'Código inline',
+    'Usa el comando `npm install` dentro de una frase para previsualizar el código inline.',
   ),
   block(
-    'p-diagnostico',
-    'Párrafo — Diagnóstico',
-    'Los sistemas de IA pueden analizar imágenes médicas con una precisión que rivaliza, y en algunos casos supera, la de radiólogos experimentados. Esto es especialmente relevante en la detección de cánceres y enfermedades cardiovasculares.',
-  ),
-  block(
-    'h3-cancer',
-    'Subsección H3 — Cáncer',
-    '### Detección Temprana del Cáncer',
-  ),
-  block(
-    'p-cancer',
-    'Párrafo — Cáncer',
-    'Estudios recientes muestran que los algoritmos de visión por computadora pueden identificar tumores malignos en mamografías con un **95% de precisión**, reduciendo significativamente los falsos positivos que generan *ansiedad innecesaria* en los pacientes.',
-  ),
-  block(
-    'ul-cancer',
+    'ul',
     'Lista desordenada',
-    '- Reducción del 30% en diagnósticos erróneos\n- Tiempo de análisis reducido de horas a minutos\n- Mayor accesibilidad en zonas rurales mediante telemedicina',
+    '- Primer elemento\n- Segundo elemento\n- Tercer elemento',
   ),
   block(
-    'h3-cardiaco',
-    'Subsección H3 — Cardiología',
-    '### Análisis de Imágenes Cardíacas',
-  ),
-  block(
-    'p-cardiaco',
-    'Párrafo — Cardiología',
-    'La IA también está revolucionando la cardiología. Los modelos pueden predecir eventos cardiovasculares analizando electrocardiogramas y ecocardiogramas, identificando patrones sutiles que podrían pasar desapercibidos.',
-  ),
-  block(
-    'h2-personalizada',
-    'Sección H2 — Medicina personalizada',
-    '## Medicina Personalizada y Genómica',
-  ),
-  block(
-    'p-personalizada',
-    'Párrafo — Medicina personalizada',
-    'Uno de los avances más prometedores es la capacidad de la IA para procesar enormes cantidades de datos genéticos y crear planes de tratamiento personalizados para cada paciente.',
-  ),
-  block(
-    'blockquote',
-    'Cita',
-    '> "La medicina del futuro no tratará enfermedades, tratará pacientes individuales con sus características únicas genéticas y ambientales."\n> — Dr. Sarah Chen, Instituto de Medicina Genómica',
-  ),
-  block(
-    'h3-farmacogenomica',
-    'Subsección H3 — Farmacogenómica',
-    '### Farmacogenómica',
-  ),
-  block(
-    'p-farmacogenomica',
-    'Párrafo — Farmacogenómica',
-    'Los algoritmos pueden predecir cómo responderá un paciente específico a diferentes medicamentos basándose en su perfil genético, evitando ***reacciones adversas*** y optimizando la eficacia del tratamiento.',
-  ),
-  block(
-    'ol-farmacogenomica',
+    'ol',
     'Lista ordenada',
-    '1. Análisis del genoma completo del paciente\n2. Identificación de marcadores genéticos relevantes\n3. Predicción de respuesta a fármacos específicos\n4. Ajuste de dosis personalizado\n5. Monitoreo continuo y adaptación del tratamiento',
-  ),
-  block(
-    'h2-eticos',
-    'Sección H2 — Desafíos éticos',
-    '## Desafíos Éticos y Regulatorios',
-  ),
-  block(
-    'p-eticos',
-    'Párrafo — Desafíos éticos',
-    'A pesar de sus beneficios, la implementación de IA en medicina plantea importantes cuestiones éticas que deben abordarse cuidadosamente.',
-  ),
-  block(
-    'h3-privacidad',
-    'Subsección H3 — Privacidad',
-    '### Privacidad de Datos',
-  ),
-  block(
-    'p-privacidad',
-    'Párrafo — Privacidad',
-    'El uso de grandes cantidades de datos médicos sensibles requiere protocolos estrictos de seguridad. Los sistemas deben cumplir con regulaciones como ~~HIPAA~~ GDPR y garantizar el anonimato de los pacientes.',
+    '1. Primer paso\n2. Segundo paso\n3. Tercer paso',
   ),
   block(
     'tasks',
     'Lista de tareas',
-    '- [x] Implementar encriptación end-to-end\n- [x] Establecer protocolos de consentimiento informado\n- [ ] Desarrollar estándares internacionales de interoperabilidad\n- [ ] Crear marcos regulatorios específicos para IA médica',
+    '- [x] Tarea completada\n- [ ] Tarea pendiente',
   ),
   block(
-    'h3-sesgo',
-    'Subsección H3 — Sesgo algorítmico',
-    '### Sesgo Algorítmico',
-  ),
-  block(
-    'p-sesgo',
-    'Párrafo — Sesgo algorítmico',
-    'Los modelos de IA pueden perpetuar sesgos existentes en los datos de entrenamiento. Es crucial usar `conjuntos de datos diversos` y realizar auditorías regulares para garantizar equidad en el tratamiento.',
+    'blockquote',
+    'Cita',
+    '> Esta es una cita de ejemplo para previsualizar el estilo del blockquote.\n> — Autor de ejemplo',
   ),
   block(
     'code',
     'Bloque de código',
-    '```python\n# Ejemplo de validación de equidad en modelo médico\ndef evaluar_sesgo(modelo, datos_demograficos):\n    resultados = {}\n    for grupo in datos_demograficos:\n        precision = modelo.evaluate(grupo)\n        resultados[grupo.nombre] = precision\n    return resultados\n```',
-  ),
-  block(
-    'h2-futuro',
-    'Sección H2 — Futuro',
-    '## El Futuro de la IA en Medicina',
-  ),
-  block(
-    'p-futuro',
-    'Párrafo — Futuro',
-    'Las proyecciones indican que para 2030, el mercado global de IA en salud alcanzará los 188 mil millones de dólares. Las áreas más prometedoras incluyen:',
+    '```javascript\nfunction greet(name) {\n  return `Hello, ${name}!`;\n}\n```',
   ),
   block(
     'table',
     'Tabla',
-    '| Área de Aplicación | Impacto Esperado | Inversión 2024 |\n| --- | --- | --- |\n| Diagnóstico por imagen | Alto | $15.4B |\n| Descubrimiento de fármacos | Muy alto | $12.8B |\n| Asistentes virtuales | Medio | $8.2B |\n| Cirugía robótica | Alto | $10.1B |',
-  ),
-  block(
-    'h3-robotica',
-    'Subsección H3 — Cirugía robótica',
-    '### Cirugía Robótica Asistida por IA',
-  ),
-  block(
-    'p-robotica',
-    'Párrafo — Cirugía robótica',
-    'La convergencia entre robots quirúrgicos e inteligencia artificial permite intervenciones más precisas, con menor sangrado y recuperaciones más rápidas. Los sistemas combinan visión aumentada, planificación asistida y control en tiempo real.',
-  ),
-  block(
-    'img-robotica',
-    'Imagen',
-    `![Sistema de cirugía robótica en William Beaumont Army Medical Center](${ROBOTIC_SURGERY_IMAGE})`,
-  ),
-  block(
-    'h4-robotica',
-    'Subsección H4 — Precisión',
-    '#### Precisión en el Quirófano',
-  ),
-  block(
-    'p-h4-robotica',
-    'Párrafo — Precisión',
-    'Los brazos robóticos filtran el temblor manual y escalan los movimientos del cirujano, lo que resulta especialmente valioso en procedimientos de alta complejidad como reanastomosis tubáricas o microcirugía.',
-  ),
-  block(
-    'h5-robotica',
-    'Subsección H5 — Monitorización',
-    '##### Monitorización en Tiempo Real',
-  ),
-  block(
-    'p-h5-robotica',
-    'Párrafo — Monitorización',
-    'Sensores y modelos predictivos pueden alertar sobre desviaciones durante la operación, ayudando al equipo a tomar decisiones antes de que aparezcan complicaciones visibles.',
-  ),
-  block(
-    'h6-robotica',
-    'Subsección H6 — Formación',
-    '###### Formación del Equipo Médico',
-  ),
-  block(
-    'p-h6-robotica',
-    'Párrafo — Formación',
-    'La simulación asistida por IA acelera la curva de aprendizaje de residentes y enfermeras instrumentistas, estandarizando protocolos sin sustituir la supervisión clínica.',
-  ),
-  block(
-    'h3-iot',
-    'Subsección H3 — IoT médico',
-    '### Integración con IoT Médico',
-  ),
-  block(
-    'p-iot',
-    'Párrafo — IoT (con enlace)',
-    'Los dispositivos portables (wearables) conectados a sistemas de IA permitirán monitoreo continuo de signos vitales y alertas tempranas de problemas de salud. Imagina un futuro donde tu [smartwatch](https://example.com) detecta arritmias cardíacas antes de que sientas síntomas.',
-  ),
-  block(
-    'h2-conclusion',
-    'Sección H2 — Conclusión',
-    '## Conclusión',
-  ),
-  block(
-    'p-conclusion',
-    'Párrafo — Conclusión',
-    'La inteligencia artificial no reemplazará a los médicos, pero los médicos que usen IA reemplazarán a los que no lo hagan. La clave está en encontrar el equilibrio perfecto entre la capacidad analítica de las máquinas y la empatía y juicio clínico humano.',
+    '| Columna A | Columna B |\n| --- | --- |\n| Celda 1 | Celda 2 |\n| Celda 3 | Celda 4 |',
   ),
   block('hr', 'Separador', '---'),
-  block(
-    'p-cierre',
-    'Párrafo — Código inline',
-    'Para más información sobre implementaciones específicas, consulta el repositorio de código abierto `medical-ai-toolkit` disponible en GitHub.',
-  ),
+  block('img', 'Imagen', `![Imagen de ejemplo](${SAMPLE_IMAGE})`),
 ];
 
 export function cloneDefaultBlocks(): MarkdownBlock[] {
@@ -227,44 +83,21 @@ export function findDefaultBlock(id: string): MarkdownBlock | undefined {
 export const SECTION_STYLE_GROUP: Record<string, string> = {
   title: 'h1',
   intro: 'paragraph',
+  'p-second': 'paragraph',
   'p-emphasis': 'emphasis',
-  'h2-diagnostico': 'h2',
-  'p-diagnostico': 'paragraph',
-  'h3-cancer': 'h3',
-  'p-cancer': 'paragraph',
-  'ul-cancer': 'lists',
-  'h3-cardiaco': 'h3',
-  'p-cardiaco': 'paragraph',
-  'h2-personalizada': 'h2',
-  'p-personalizada': 'paragraph',
-  blockquote: 'blockquote',
-  'h3-farmacogenomica': 'h3',
-  'p-farmacogenomica': 'paragraph',
-  'ol-farmacogenomica': 'lists',
-  'h2-eticos': 'h2',
-  'p-eticos': 'paragraph',
-  'h3-privacidad': 'h3',
-  'p-privacidad': 'paragraph',
+  h2: 'h2',
+  h3: 'h3',
+  h4: 'h4',
+  h5: 'h5',
+  h6: 'h6',
+  'p-links': 'links',
+  'p-inline-code': 'inline-code',
+  ul: 'lists',
+  ol: 'lists',
   tasks: 'task-list',
-  'h3-sesgo': 'h3',
-  'p-sesgo': 'paragraph',
+  blockquote: 'blockquote',
   code: 'code-block',
-  'h2-futuro': 'h2',
-  'p-futuro': 'paragraph',
   table: 'table',
-  'h3-robotica': 'h3',
-  'p-robotica': 'paragraph',
-  'img-robotica': 'hr-image',
-  'h4-robotica': 'h4',
-  'p-h4-robotica': 'paragraph',
-  'h5-robotica': 'h5',
-  'p-h5-robotica': 'paragraph',
-  'h6-robotica': 'h6',
-  'p-h6-robotica': 'paragraph',
-  'h3-iot': 'h3',
-  'p-iot': 'links',
-  'h2-conclusion': 'h2',
-  'p-conclusion': 'paragraph',
   hr: 'hr-image',
-  'p-cierre': 'inline-code',
+  img: 'hr-image',
 };
