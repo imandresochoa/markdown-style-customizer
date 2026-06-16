@@ -26,6 +26,7 @@ export type AppState = {
   blocks: MarkdownBlock[];
   selectedSectionId: string | null;
   presets: SavedThemePreset[];
+  activePresetId: string | null;
   toast: string | null;
 };
 
@@ -43,6 +44,8 @@ type Action =
   | { type: 'SELECT_SECTION'; id: string | null }
   | { type: 'APPLY_PAYLOAD'; themeName: string; theme: ThemeVariables; blocks?: MarkdownBlock[] }
   | { type: 'SAVE_PRESET'; name: string }
+  | { type: 'SAVE_PRESET_AS'; name: string }
+  | { type: 'NEW_PRESET' }
   | { type: 'LOAD_PRESET'; id: string }
   | { type: 'DELETE_PRESET'; id: string }
   | { type: 'SET_TOAST'; message: string | null };
@@ -59,7 +62,8 @@ function initState(): AppState {
       blocks: hashPayload.blocks ?? defaultBlocks,
       selectedSectionId: null,
       presets: loadPresets(),
-      toast: 'Theme loaded from share link',
+      activePresetId: null,
+      toast: 'Tema cargado desde el enlace compartido',
     };
   }
 
@@ -70,6 +74,7 @@ function initState(): AppState {
       blocks: session.blocks,
       selectedSectionId: null,
       presets: loadPresets(),
+      activePresetId: null,
       toast: null,
     };
   }
@@ -80,6 +85,7 @@ function initState(): AppState {
     blocks: defaultBlocks,
     selectedSectionId: null,
     presets: loadPresets(),
+    activePresetId: null,
     toast: null,
   };
 }
@@ -192,20 +198,76 @@ function reducer(state: AppState, action: Action): AppState {
         theme: { ...cloneDefaultTheme(), ...action.theme },
         blocks: action.blocks ?? state.blocks,
         selectedSectionId: null,
-        toast: `Loaded "${action.themeName}"`,
+        activePresetId: null,
+        toast: `"${action.themeName}" cargado`,
       };
 
     case 'SAVE_PRESET': {
+      const activePreset = state.activePresetId
+        ? state.presets.find((p) => p.id === state.activePresetId)
+        : undefined;
+
+      if (activePreset) {
+        const presets = state.presets.map((p) =>
+          p.id === activePreset.id
+            ? {
+                ...p,
+                name: action.name,
+                theme: { ...state.theme },
+                blocks: state.blocks.map((b) => ({ ...b })),
+                savedAt: new Date().toISOString(),
+              }
+            : p,
+        );
+        savePresets(presets);
+        return { ...state, presets, toast: `Plantilla "${action.name}" guardada` };
+      }
+
       const preset: SavedThemePreset = {
         id: crypto.randomUUID(),
         name: action.name,
         theme: { ...state.theme },
+        blocks: state.blocks.map((b) => ({ ...b })),
         savedAt: new Date().toISOString(),
       };
       const presets = [...state.presets, preset];
       savePresets(presets);
-      return { ...state, presets, toast: `Saved preset "${action.name}"` };
+      return {
+        ...state,
+        presets,
+        activePresetId: preset.id,
+        toast: `Plantilla "${action.name}" creada`,
+      };
     }
+
+    case 'SAVE_PRESET_AS': {
+      const preset: SavedThemePreset = {
+        id: crypto.randomUUID(),
+        name: action.name,
+        theme: { ...state.theme },
+        blocks: state.blocks.map((b) => ({ ...b })),
+        savedAt: new Date().toISOString(),
+      };
+      const presets = [...state.presets, preset];
+      savePresets(presets);
+      return {
+        ...state,
+        presets,
+        activePresetId: preset.id,
+        toast: `Plantilla "${action.name}" creada`,
+      };
+    }
+
+    case 'NEW_PRESET':
+      return {
+        ...state,
+        themeName: 'Mi plantilla',
+        theme: cloneDefaultTheme(),
+        blocks: cloneDefaultBlocks(),
+        selectedSectionId: null,
+        activePresetId: null,
+        toast: 'Nueva plantilla',
+      };
 
     case 'LOAD_PRESET': {
       const preset = state.presets.find((p) => p.id === action.id);
@@ -214,14 +276,24 @@ function reducer(state: AppState, action: Action): AppState {
         ...state,
         themeName: preset.name,
         theme: { ...cloneDefaultTheme(), ...preset.theme },
-        toast: `Loaded preset "${preset.name}"`,
+        blocks: preset.blocks.length
+          ? preset.blocks.map((b) => ({ ...b }))
+          : state.blocks,
+        selectedSectionId: null,
+        activePresetId: preset.id,
+        toast: `Plantilla "${preset.name}" cargada`,
       };
     }
 
     case 'DELETE_PRESET': {
       const presets = state.presets.filter((p) => p.id !== action.id);
       savePresets(presets);
-      return { ...state, presets, toast: 'Preset deleted' };
+      return {
+        ...state,
+        presets,
+        activePresetId: state.activePresetId === action.id ? null : state.activePresetId,
+        toast: 'Plantilla eliminada',
+      };
     }
 
     case 'SET_TOAST':

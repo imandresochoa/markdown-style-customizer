@@ -21,6 +21,7 @@ export type SavedThemePreset = {
   id: string;
   name: string;
   theme: ThemeVariables;
+  blocks: MarkdownBlock[];
   savedAt: string;
 };
 
@@ -198,7 +199,11 @@ export function loadPresets(): SavedThemePreset[] {
     const raw = localStorage.getItem(PRESETS_KEY);
     if (!raw) return [];
     const data = JSON.parse(raw);
-    return Array.isArray(data) ? data : [];
+    if (!Array.isArray(data)) return [];
+    return data.map((preset: SavedThemePreset) => ({
+      ...preset,
+      blocks: Array.isArray(preset.blocks) ? preset.blocks : [],
+    }));
   } catch {
     return [];
   }
