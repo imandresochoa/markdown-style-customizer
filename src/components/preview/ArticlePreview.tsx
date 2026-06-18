@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
   DndContext,
   closestCenter,
@@ -35,11 +36,19 @@ export function ArticlePreview() {
     dispatch({ type: 'REORDER_BLOCKS', fromIndex, toIndex });
   };
 
-  const handleViewportClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      dispatch({ type: 'SELECT_SECTION', id: null });
-    }
+  const handleCanvasClick = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest('.article-section')) return;
+    dispatch({ type: 'SELECT_SECTION', id: null });
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' || !state.selectedSectionId) return;
+      dispatch({ type: 'SELECT_SECTION', id: null });
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [dispatch, state.selectedSectionId]);
 
   return (
     <main className="article-zone">
@@ -47,9 +56,9 @@ export function ArticlePreview() {
       <div
         className="article-viewport md-preview"
         style={themeToStyle(state.theme)}
-        onClick={handleViewportClick}
+        onClick={handleCanvasClick}
       >
-        <div className="article-viewport-inner">
+        <div className="article-viewport-inner" onClick={handleCanvasClick}>
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
