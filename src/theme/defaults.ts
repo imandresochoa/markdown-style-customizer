@@ -102,7 +102,7 @@ export const DEFAULT_THEME: ThemeVariables = {
   '--md-ol-list-style': 'decimal',
   '--md-li-margin': '4px 0',
   '--md-li-line-height': '1.6',
-  '--md-li-marker-color': '#374151',
+  '--md-li-marker-color': '#2563eb',
   '--md-list-padding-left': '24px',
   '--md-list-margin': '0 0 16px 0',
 

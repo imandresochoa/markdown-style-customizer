@@ -152,6 +152,10 @@
 .md-preview li {
   margin: var(--md-li-margin);
   line-height: var(--md-li-line-height);
+  color: var(--md-p-color);
+}
+
+.md-preview li::marker {
   color: var(--md-li-marker-color);
 }
 

@@ -128,6 +128,7 @@ function reducer(state: AppState, action: Action): AppState {
         '--md-a-color': base,
         '--md-a-hover-color': hover,
         '--md-task-checkbox-accent': base,
+        '--md-li-marker-color': base,
         '--md-blockquote-border-color': base,
         '--md-code-color': codeInk,
         '--md-code-bg': codeBg,
@@ -165,7 +166,6 @@ function reducer(state: AppState, action: Action): AppState {
         '--md-p-color': base,
         '--md-strong-color': base,
         '--md-em-color': base,
-        '--md-li-marker-color': base,
         '--md-blockquote-color': soft,
         '--md-del-color': faint,
       };
