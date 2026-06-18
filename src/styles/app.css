@@ -127,15 +127,12 @@
 }
 
 .global-colors {
-  flex-shrink: 0;
-  padding: 12px 16px;
-  border-bottom: 1px solid #e5e7eb;
-  background: #ffffff;
+  padding: 8px 12px 12px;
 }
 
 .global-colors-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 16px;
 }
 

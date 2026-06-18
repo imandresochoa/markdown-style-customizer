@@ -1,7 +1,7 @@
 import type { ThemeVariables } from './defaults';
 import type { FontCategory } from '../data/fonts';
 
-export type ControlType = 'color' | 'text' | 'select' | 'size' | 'font';
+export type ControlType = 'color' | 'text' | 'select' | 'size' | 'font' | 'border';
 
 export type StyleControlDef = {
   key: keyof ThemeVariables | string;
@@ -24,7 +24,7 @@ const headingControls = (level: number): StyleControlDef[] => [
   { key: `--md-h${level}-font-weight`, label: 'Font weight', type: 'select', options: ['400', '500', '600', '700', '800'] },
   { key: `--md-h${level}-margin-top`, label: 'Margin top', type: 'size' },
   { key: `--md-h${level}-margin-bottom`, label: 'Margin bottom', type: 'size' },
-  { key: `--md-h${level}-border-bottom`, label: 'Border bottom', type: 'text' },
+  { key: `--md-h${level}-border-bottom`, label: 'Border bottom', type: 'border' },
 ];
 
 export const CONTROL_GROUPS: ControlGroup[] = [
@@ -175,7 +175,7 @@ function navItem(id: string, label: string): StyleNavItem {
 export const STYLE_NAV_CATEGORIES: StyleNavCategory[] = [
   {
     label: 'General',
-    items: [navItem('base', 'Base')],
+    items: [navItem('colors', 'Colores'), navItem('base', 'Base')],
   },
   {
     label: 'Títulos',
