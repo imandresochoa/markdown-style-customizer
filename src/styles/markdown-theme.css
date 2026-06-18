@@ -152,19 +152,11 @@
 .md-preview li {
   margin: var(--md-li-margin);
   line-height: var(--md-li-line-height);
-  color: var(--md-p-color);
 }
 
 .md-preview li::marker {
   color: var(--md-li-marker-color);
 }
-
-.md-preview li h1 { color: var(--md-h1-color); }
-.md-preview li h2 { color: var(--md-h2-color); }
-.md-preview li h3 { color: var(--md-h3-color); }
-.md-preview li h4 { color: var(--md-h4-color); }
-.md-preview li h5 { color: var(--md-h5-color); }
-.md-preview li h6 { color: var(--md-h6-color); }
 
 .md-preview li > p {
   margin: 0;
