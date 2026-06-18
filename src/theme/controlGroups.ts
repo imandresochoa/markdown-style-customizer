@@ -41,7 +41,17 @@ export const CONTROL_GROUPS: ControlGroup[] = [
       { key: '--md-content-padding', label: 'Padding', type: 'size' },
     ],
   },
-  ...([1, 2, 3, 4, 5, 6] as const).map((n) => ({
+  {
+    id: 'h1',
+    label: 'Heading 1',
+    controls: [
+      ...headingControls(1),
+      { key: '--md-h1-bg', label: 'Background', type: 'color' as const },
+      { key: '--md-h1-padding', label: 'Padding', type: 'text' as const },
+      { key: '--md-h1-border-radius', label: 'Border radius', type: 'size' as const },
+    ],
+  },
+  ...([2, 3, 4, 5, 6] as const).map((n) => ({
     id: `h${n}`,
     label: `Heading ${n}`,
     controls: headingControls(n),

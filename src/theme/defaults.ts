@@ -21,6 +21,9 @@ export const DEFAULT_THEME: ThemeVariables = {
   '--md-h1-margin-top': '0',
   '--md-h1-margin-bottom': '16px',
   '--md-h1-border-bottom': '2px solid #e5e7eb',
+  '--md-h1-bg': 'transparent',
+  '--md-h1-padding': '0',
+  '--md-h1-border-radius': '0px',
 
   '--md-h2-color': '#111827',
   '--md-h2-font-size': '1.75rem',

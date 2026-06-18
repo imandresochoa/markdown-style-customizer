@@ -17,6 +17,9 @@
   margin-top: var(--md-h1-margin-top);
   margin-bottom: var(--md-h1-margin-bottom);
   border-bottom: var(--md-h1-border-bottom);
+  background: var(--md-h1-bg);
+  padding: var(--md-h1-padding);
+  border-radius: var(--md-h1-border-radius);
   line-height: 1.25;
 }
 
