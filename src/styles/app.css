@@ -402,6 +402,11 @@
   background: #1d4ed8;
 }
 
+.preview-toolbar-icon--active {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
 .preview-toolbar-icon--danger:hover:not(:disabled) {
   background: #fef2f2;
   color: #dc2626;
@@ -504,6 +509,27 @@
 
 .section-inline-editor:focus {
   outline: none;
+}
+
+.free-canvas-editor {
+  width: 100%;
+  min-height: 70vh;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 12px;
+  resize: vertical;
+  background: #ffffff;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: #111827;
+  box-sizing: border-box;
+}
+
+.free-canvas-editor:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 1px;
+  border-color: #2563eb;
 }
 
 .article-section-content {

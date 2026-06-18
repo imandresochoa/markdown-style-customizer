@@ -5,7 +5,21 @@ import { useAppState } from '../../store/appState';
 import { MaterialIcon } from '../icons/MaterialIcon';
 import { MATERIAL_ICONS } from '../icons/iconNames';
 
-export function PreviewToolbar() {
+type Props = {
+  freeEditMode: boolean;
+  freeEditDirty: boolean;
+  onToggleFreeEditMode: () => void;
+  onApplyFreeEditMode: () => void;
+  onCancelFreeEditMode: () => void;
+};
+
+export function PreviewToolbar({
+  freeEditMode,
+  freeEditDirty,
+  onToggleFreeEditMode,
+  onApplyFreeEditMode,
+  onCancelFreeEditMode,
+}: Props) {
   const { state, dispatch } = useAppState();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -55,6 +69,42 @@ export function PreviewToolbar() {
   return (
     <div className="preview-toolbar-float" role="toolbar" aria-label="Block actions">
       <div className="preview-toolbar-inner">
+        <button
+          type="button"
+          className={`preview-toolbar-icon${freeEditMode ? ' preview-toolbar-icon--active' : ''}`}
+          onClick={onToggleFreeEditMode}
+          aria-label={freeEditMode ? 'Volver al modo por bloques' : 'Activar edición libre'}
+          title={freeEditMode ? 'Volver al modo por bloques' : 'Activar edición libre'}
+        >
+          <MaterialIcon name="edit_note" size={18} />
+        </button>
+
+        {freeEditMode && (
+          <div className="preview-toolbar-selection">
+            <button
+              type="button"
+              className="preview-toolbar-icon preview-toolbar-icon--primary"
+              onClick={onApplyFreeEditMode}
+              aria-label="Aplicar markdown y detectar bloques"
+              title="Aplicar markdown y detectar bloques"
+            >
+              <MaterialIcon name="done" size={18} />
+            </button>
+            {freeEditDirty && (
+              <button
+                type="button"
+                className="preview-toolbar-icon preview-toolbar-icon--danger"
+                onClick={onCancelFreeEditMode}
+                aria-label="Cancelar edición libre"
+                title="Cancelar edición libre"
+              >
+                <MaterialIcon name="close" size={18} />
+              </button>
+            )}
+          </div>
+        )}
+
+        {!freeEditMode && (
         <div className="preview-toolbar-group" ref={menuRef}>
           <button
             type="button"
@@ -83,8 +133,9 @@ export function PreviewToolbar() {
             </div>
           )}
         </div>
+        )}
 
-        {hasSelectionActions && (
+        {!freeEditMode && hasSelectionActions && (
           <div className="preview-toolbar-selection">
             {canRemove && (
               <button
