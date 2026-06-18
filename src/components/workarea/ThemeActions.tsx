@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useMemo } from 'react';
 import { useAppState } from '../../store/appState';
 import {
   blocksToMarkdown,
+  blocksToMarkdownWithHtml,
   createSharedPayload,
   createSpecPayload,
   downloadFile,
@@ -51,6 +52,14 @@ export function ThemeActions() {
     const slug = state.themeName.toLowerCase().replace(/\s+/g, '-');
     downloadFile(markdown, `${slug || 'contenido'}.md`, 'text/markdown');
     dispatch({ type: 'SET_TOAST', message: 'Markdown exportado' });
+    closeMenu();
+  };
+
+  const handleExportMarkdownWithHtml = () => {
+    const markdownWithHtml = blocksToMarkdownWithHtml(state.blocks);
+    const slug = state.themeName.toLowerCase().replace(/\s+/g, '-');
+    downloadFile(markdownWithHtml, `${slug || 'contenido'}-html.md`, 'text/markdown');
+    dispatch({ type: 'SET_TOAST', message: 'Markdown con HTML exportado' });
     closeMenu();
   };
 
@@ -344,6 +353,14 @@ export function ThemeActions() {
                   onClick={handleExportMarkdown}
                 >
                   Exportar Markdown (.md)
+                </button>
+                <button
+                  type="button"
+                  role="menuitem"
+                  className="actions-menu-item"
+                  onClick={handleExportMarkdownWithHtml}
+                >
+                  Exportar Markdown + HTML (.md)
                 </button>
                 <button
                   type="button"

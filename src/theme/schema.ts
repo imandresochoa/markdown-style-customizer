@@ -1,4 +1,5 @@
 import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from 'lz-string';
+import { marked } from 'marked';
 import type { ThemeVariables } from './defaults';
 import { cloneDefaultTheme } from './defaults';
 
@@ -162,6 +163,17 @@ export function downloadJson(payload: SharedPayload, filename: string): void {
 
 export function blocksToMarkdown(blocks: MarkdownBlock[]): string {
   return blocks.map((block) => block.markdown.trim()).join('\n\n') + '\n';
+}
+
+export function blocksToMarkdownWithHtml(blocks: MarkdownBlock[]): string {
+  return (
+    blocks
+      .map((block) => {
+        const html = marked.parse(block.markdown, { gfm: true, breaks: true }) as string;
+        return html.trim();
+      })
+      .join('\n\n') + '\n'
+  );
 }
 
 export async function readJsonFile(file: File): Promise<SharedPayload | null> {
