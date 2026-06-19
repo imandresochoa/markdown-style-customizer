@@ -42,6 +42,15 @@ export function createSpecPayload(name: string, theme: ThemeVariables): SpecPayl
   };
 }
 
+function compactThemeForShare(theme: ThemeVariables): ThemeVariables {
+  const defaults = cloneDefaultTheme();
+  const compact: ThemeVariables = {};
+  for (const [key, value] of Object.entries(theme)) {
+    if (defaults[key] !== value) compact[key] = value;
+  }
+  return compact;
+}
+
 export function validateSpecPayload(data: unknown): SpecPayload | null {
   if (!data || typeof data !== 'object') return null;
   const payload = data as Partial<SpecPayload>;
@@ -64,7 +73,11 @@ export function validateSpecPayload(data: unknown): SpecPayload | null {
 }
 
 export function encodeSpecShareUrl(payload: SpecPayload): string {
-  const json = JSON.stringify(payload);
+  const compactPayload: SpecPayload = {
+    ...payload,
+    theme: compactThemeForShare(payload.theme),
+  };
+  const json = JSON.stringify(compactPayload);
   const compressed = compressToEncodedURIComponent(json);
   const base = window.location.href.split('#')[0];
   return `${base}#spec=${compressed}`;
@@ -76,7 +89,12 @@ export function decodeSpecShareUrl(hash: string): SpecPayload | null {
   try {
     const json = decompressFromEncodedURIComponent(match[1]);
     if (!json) return null;
-    return validateSpecPayload(JSON.parse(json));
+    const payload = validateSpecPayload(JSON.parse(json));
+    if (!payload) return null;
+    return {
+      ...payload,
+      theme: { ...cloneDefaultTheme(), ...payload.theme },
+    };
   } catch {
     return null;
   }
@@ -129,7 +147,11 @@ export function validateSharedPayload(data: unknown): SharedPayload | null {
 }
 
 export function encodeShareUrl(payload: SharedPayload): string {
-  const json = JSON.stringify(payload);
+  const compactPayload: SharedPayload = {
+    ...payload,
+    theme: compactThemeForShare(payload.theme),
+  };
+  const json = JSON.stringify(compactPayload);
   const compressed = compressToEncodedURIComponent(json);
   const base = window.location.href.split('#')[0];
   return `${base}#t=${compressed}`;
